@@ -1,11 +1,12 @@
 {
   "name": "netlogix/nxmigrations",
-  "description": "netlogix styleguide",
+  "description": "doctrine migrations for TYPO3 CMS",
   "type": "typo3-cms-extension",
   "license": "MIT",
   "require": {
     "php": "^8.1",
-    "typo3/cms-core": "^12.4"
+    "typo3/cms-core": "^12.4",
+    "doctrine/migrations": "^3.7"
   },
   "require-dev": {
     "ext-sqlite3": "*",
