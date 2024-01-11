@@ -1,0 +1,55 @@
+{
+  "name": "netlogix/nxmigrations",
+  "description": "netlogix styleguide",
+  "type": "typo3-cms-extension",
+  "license": "MIT",
+  "require": {
+    "php": "^8.1",
+    "typo3/cms-core": "^12.4"
+  },
+  "require-dev": {
+    "ext-sqlite3": "*",
+    "ssch/typo3-rector": "^1.5",
+    "typo3/testing-framework": "^8.0",
+    "phpunit/phpcov": "^9.0",
+    "netlogix/coding-guidelines-php": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Netlogix\\Nxmigrations\\": "Classes"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Netlogix\\Nxmigrations\\Tests\\": "Tests"
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "nxmigrations",
+      "web-dir": ".Build/public"
+    }
+  },
+  "config": {
+    "vendor-dir": ".Build/vendor",
+    "bin-dir": ".Build/bin",
+    "allow-plugins": {
+      "typo3/class-alias-loader": true,
+      "typo3/cms-composer-installers": true
+    }
+  },
+  "scripts": {
+    "rector": "rector process --dry-run",
+    "rector-fix": "rector process",
+    "lint": "ecs check",
+    "lint-fix": "ecs check --fix",
+    "test-unit": "phpunit -c phpunit.xml",
+    "test-functional": "phpunit -c phpunit_functional.xml",
+    "post-autoload-dump": [
+      "@prepare-extension-test-structure"
+    ],
+    "prepare-extension-test-structure": [
+      "TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
+    ]
+  }
+}

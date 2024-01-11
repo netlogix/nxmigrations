@@ -1,0 +1,70 @@
+name: Apply Coding Standard
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  php-coding-standard:
+    name: 'Apply PHP Coding Standard'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Code'
+        uses: actions/checkout@v4
+
+      - name: 'Setup PHP'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+
+      - name: 'Get Composer Cache Directory'
+        id: composer-cache
+        shell: bash
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: 'Cache Composer Dependencies'
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer
+
+      - name: 'Install Composer Dependencies'
+        shell: bash
+        run: composer install --no-interaction
+
+      - name: 'Rector PHP Code'
+        shell: bash
+        run: composer rector-fix
+
+      - name: 'Lint PHP Code'
+        shell: bash
+        run: composer lint-fix
+
+      - name: 'Run PHPUnit unit tests'
+        shell: bash
+        run: composer test-unit
+
+      - name: 'Run PHPUnit functional tests'
+        shell: bash
+        run: composer test-functional
+
+      - name: 'Create pull-request'
+        id: cpr
+        uses: peter-evans/create-pull-request@v5.0.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "[automated] Apply Coding Standard"
+          base: 'master'
+          branch: 'automated-apply-coding-standards'
+          title: '[automated] Apply Coding Standard'
+          labels: 'automated'
+          delete-branch: true
+
+      - name: 'Enable Pull Request Merge when ready'
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        run: gh pr merge --auto "${{ steps.cpr.outputs.pull-request-number }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
