@@ -31,7 +31,7 @@ class StatusCommand extends Command
             );
     }
 
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln($this->doctrineService->getFormattedMigrationStatus($input->getOption('showMigrations')));
 

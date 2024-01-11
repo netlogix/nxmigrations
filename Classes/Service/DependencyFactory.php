@@ -18,8 +18,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class DependencyFactory
 {
+    /**
+     * @var string
+     */
     final public const DOCTRINE_MIGRATIONSTABLENAME = 'sys_doctrine_migrationstatus';
 
+    /**
+     * @var string
+     */
     final public const DOCTRINE_MIGRATIONSNAMESPACE = 'Netlogix\Migrations\Persistence\Doctrine\Migrations';
 
     public function createFromConnection(Connection $connection, BufferedOutput $logMessages): DoctrineDependencyFactory
@@ -28,6 +34,7 @@ class DependencyFactory
         if (!is_dir($migrationsPath)) {
             GeneralUtility::mkdir_deep($migrationsPath);
         }
+
         $configurationLoader = new ConfigurationArray([
             'table_storage' => [
                 'table_name' => self::DOCTRINE_MIGRATIONSTABLENAME,
