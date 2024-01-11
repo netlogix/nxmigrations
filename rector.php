@@ -124,7 +124,7 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     // If you have trouble that rector cannot run because some TYPO3 constants are not defined add an additional constants file
-    // @see https://github.com/sabbelasichon/typo3-rector/blob/master/typo3.constants.php
+    // @see https://github.com/sabbelasichon/typo3-rector/blob/main/typo3.constants.php
     // @see https://github.com/rectorphp/rector/blob/main/docs/static_reflection_and_autoload.md#include-files
     // $parameters->set(Option::BOOTSTRAP_FILES, [
     //    __DIR__ . '/typo3.constants.php'

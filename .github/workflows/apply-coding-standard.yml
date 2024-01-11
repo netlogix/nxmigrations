@@ -3,7 +3,7 @@ name: Apply Coding Standard
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   php-coding-standard:
@@ -57,7 +57,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "[automated] Apply Coding Standard"
-          base: 'master'
+          base: 'main'
           branch: 'automated-apply-coding-standards'
           title: '[automated] Apply Coding Standard'
           labels: 'automated'
