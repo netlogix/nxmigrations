@@ -8,16 +8,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class Files
 {
-    public static function concatenatePaths(string ...$paths): string
+    public static function concatenatePaths(array $paths = []): string
     {
         $resultingPath = '';
         foreach ($paths as $index => $path) {
             $path = GeneralUtility::fixWindowsFilePath($path);
-            if ($index === 0) {
-                $path = rtrim($path, '/');
-            } else {
-                $path = trim($path, '/');
-            }
+            $path = $index === 0 ? rtrim($path, '/') : trim($path, '/');
+
             if ($path !== '') {
                 $resultingPath .= $path . '/';
             }

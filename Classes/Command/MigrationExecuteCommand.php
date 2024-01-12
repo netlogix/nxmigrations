@@ -37,7 +37,7 @@ class MigrationExecuteCommand extends Command
             ->addOption('dryRun', null, InputOption::VALUE_NONE, 'Whether to do a dry run or not');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $result = $this->doctrineService->executeMigration(
             version: $this->normalizeVersion($input->getArgument('version')),
