@@ -33,7 +33,7 @@ class MigrationVersionCommand extends Command
             ->addOption('delete', null, InputOption::VALUE_NONE, 'The migration to mark as not migrated');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('add') === false && $input->getOption('delete') === false) {
             throw new InvalidArgumentException(
@@ -46,8 +46,8 @@ class MigrationVersionCommand extends Command
                 $this->normalizeVersion($input->getArgument('version')),
                 $input->getOption('add') ?: false
             );
-        } catch (MigrationException $exception) {
-            $output->writeln($exception->getMessage());
+        } catch (MigrationException $migrationException) {
+            $output->writeln($migrationException->getMessage());
 
             return self::FAILURE;
         }

@@ -59,6 +59,9 @@ class DoctrineService
         return $this->logMessages->fetch();
     }
 
+    /**
+     * @return array{executed: int, unavailable: int, available: int, new: int}
+     */
     public function getMigrationStatus(): array
     {
         $executedMigrations = $this->dependencyFactory->getMetadataStorage()
@@ -129,6 +132,7 @@ class DoctrineService
                     $output .= '     -> ' . $inner->getStatement() . PHP_EOL;
                 }
             }
+
             $output .= PHP_EOL;
             $output .= $this->logMessages->fetch();
         }
@@ -173,6 +177,7 @@ class DoctrineService
                 $output .= '     -> ' . $inner->getStatement() . PHP_EOL;
             }
         }
+
         $output .= PHP_EOL;
         $output .= $this->logMessages->fetch();
 
@@ -293,7 +298,7 @@ class DoctrineService
         }
 
         $storage = $this->dependencyFactory->getMetadataStorage();
-        if ($availableMigration === null) {
+        if (!$availableMigration instanceof AvailableMigration) {
             if ($delete === false) {
                 throw UnknownMigrationVersion::new((string) $version);
             }
@@ -323,7 +328,7 @@ class DoctrineService
             $marked = true;
         }
 
-        if ($marked === true) {
+        if ($marked) {
             return;
         }
 
