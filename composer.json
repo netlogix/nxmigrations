@@ -17,12 +17,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Netlogix\\Nxmigrations\\": "Classes"
+      "Netlogix\\Migrations\\": "Classes"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Netlogix\\Nxmigrations\\Tests\\": "Tests"
+      "Netlogix\\Migrations\\Tests\\": "Tests"
     }
   },
   "extra": {
