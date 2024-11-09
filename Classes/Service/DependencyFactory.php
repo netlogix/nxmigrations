@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Netlogix\Migrations\Service;
 
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\Migrations\Configuration\Connection\ExistingConnection;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use Doctrine\Migrations\DependencyFactory as DoctrineDependencyFactory;
@@ -40,13 +43,16 @@ class DependencyFactory
         $connectionLoader = new ExistingConnection($connection);
         $logger = new ConsoleLogger($logMessages);
 
-        $databasePlatformName = ucfirst((string) $connection->getDatabasePlatform()->getName());
         $dependencyFactory = DoctrineDependencyFactory::fromConnection($configurationLoader, $connectionLoader);
         $dependencyFactory->setService(
             MigrationFinderInterface::class,
             new MigrationFinder(
                 packageManager: GeneralUtility::makeInstance(PackageManager::class),
-                databasePlatformName: $databasePlatformName,
+                databasePlatformName: match (true) {
+                    $connection->getDatabasePlatform() instanceof AbstractMySQLPlatform => 'Mysql',
+                    $connection->getDatabasePlatform() instanceof PostgreSQLPlatform => 'Postgresql',
+                    $connection->getDatabasePlatform() instanceof SQLitePlatform => 'Sqlite',
+                }
             )
         );
         $dependencyFactory->setService(LoggerInterface::class, $logger);

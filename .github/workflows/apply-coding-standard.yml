@@ -16,7 +16,7 @@ jobs:
       - name: 'Setup PHP'
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.3'
           tools: composer
 
       - name: 'Get Composer Cache Directory'
@@ -26,7 +26,7 @@ jobs:
           echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: 'Cache Composer Dependencies'
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: composer
@@ -35,9 +35,9 @@ jobs:
         shell: bash
         run: composer install --no-interaction
 
-      - name: 'Rector PHP Code'
-        shell: bash
-        run: composer rector-fix
+#      - name: 'Rector PHP Code'
+#        shell: bash
+#        run: composer rector-fix
 
       - name: 'Lint PHP Code'
         shell: bash
@@ -52,8 +52,7 @@ jobs:
         run: composer test-functional
 
       - name: 'Create pull-request'
-        id: cpr
-        uses: peter-evans/create-pull-request@v5.0.2
+        uses: peter-evans/create-pull-request@v6.0.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "[automated] Apply Coding Standard"
@@ -62,9 +61,3 @@ jobs:
           title: '[automated] Apply Coding Standard'
           labels: 'automated'
           delete-branch: true
-
-      - name: 'Enable Pull Request Merge when ready'
-        if: steps.cpr.outputs.pull-request-operation == 'created'
-        run: gh pr merge --auto "${{ steps.cpr.outputs.pull-request-number }}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

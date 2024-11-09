@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Netlogix\Migrations\Service;
 
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\Migrations\DependencyFactory as DoctrineDependencyFactory;
 use Doctrine\Migrations\Exception\MigrationClassNotFound;
 use Doctrine\Migrations\Exception\NoMigrationsFoundWithCriteria;
@@ -83,7 +86,7 @@ class DoctrineService
         string $outputPathAndFilename = null,
         mixed $dryRun = false,
         bool $quiet = false
-    ) {
+    ): string {
         $migrationRepository = $this->dependencyFactory->getMigrationRepository();
         if (count($migrationRepository->getMigrations()) === 0) {
             return sprintf('The version "%s" can\'t be reached, there are no registered migrations.', $version);
@@ -230,9 +233,12 @@ class DoctrineService
 
     public function getDatabasePlatformName(): string
     {
-        return $this->dependencyFactory->getConnection()
-            ->getDatabasePlatform()
-            ->getName();
+        $platform = $this->connection->getDatabasePlatform();
+        return match (true) {
+            $platform instanceof AbstractMySQLPlatform => 'Mysql',
+            $platform instanceof PostgreSQLPlatform => 'Postgresql',
+            $platform instanceof SQLitePlatform => 'Sqlite',
+        };
     }
 
     private function getSortedVersions(
@@ -323,7 +329,7 @@ class DoctrineService
             $marked = true;
         }
 
-        if ($marked === true) {
+        if ($marked) {
             return;
         }
 

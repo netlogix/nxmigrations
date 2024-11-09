@@ -35,11 +35,11 @@ class GenerateCommand extends Command
             ->addArgument('package', InputArgument::OPTIONAL, 'Name of the package', '');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $packages = array_filter(
             $this->packageManager->getAvailablePackages(),
-            fn (PackageInterface $package) => !$package->getPackageMetaData()
+            fn (PackageInterface $package): bool => !$package->getPackageMetaData()
                 ->isFrameworkType()
         );
         ksort($packages);
@@ -84,13 +84,13 @@ class GenerateCommand extends Command
             ucfirst($this->doctrineService->getDatabasePlatformName()),
             basename($migrationClassPathAndFilename)
         );
-        GeneralUtility::mkdir_deep(dirname((string) $targetPathAndFilename));
+        GeneralUtility::mkdir_deep(dirname($targetPathAndFilename));
         rename($migrationClassPathAndFilename, $targetPathAndFilename);
 
         $output->writeln(
             sprintf('The migration was moved to: <comment>%s</comment>', substr(
                 realpath($targetPathAndFilename),
-                strlen((string) Environment::getProjectPath())
+                strlen(Environment::getProjectPath())
             ))
         );
         $output->writeln('- Review and adjust the generated migration.');

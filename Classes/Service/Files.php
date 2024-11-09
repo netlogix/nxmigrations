@@ -13,11 +13,7 @@ final class Files
         $resultingPath = '';
         foreach ($paths as $index => $path) {
             $path = GeneralUtility::fixWindowsFilePath($path);
-            if ($index === 0) {
-                $path = rtrim($path, '/');
-            } else {
-                $path = trim($path, '/');
-            }
+            $path = $index === 0 ? rtrim($path, '/') : trim($path, '/');
             if ($path !== '') {
                 $resultingPath .= $path . '/';
             }
