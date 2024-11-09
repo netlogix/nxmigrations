@@ -234,6 +234,7 @@ class DoctrineService
     public function getDatabasePlatformName(): string
     {
         $platform = $this->connection->getDatabasePlatform();
+
         return match (true) {
             $platform instanceof AbstractMySQLPlatform => 'Mysql',
             $platform instanceof PostgreSQLPlatform => 'Postgresql',
